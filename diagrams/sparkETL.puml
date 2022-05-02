@@ -1,0 +1,69 @@
+@startuml
+'!theme toy
+'https://plantuml.com/class-diagram
+
+abstract class AbstractConnector{
+    -int connectorType
+    -string StorageLevel
+    +{abstract}DataFrame readData(SparkSession spark)
+    +{abstract}void writeData(SparkSession spark,DataFrame dataInput)
+}
+class DeltaConnector{
+    -string readWritePath
+    -string deltaTableName
+    -string writeMode
+    -string mergeConditions
+    -string dataFilePath
+    -void  __mergeDelete__(SparkSession spark,DataFrame dataInput)
+    -void __mergeUpsert__(SparkSession spark,DataFrame dataInput)
+    +DataFrame readData(SparkSession spark)
+    +void writeData(SparkSession spark,DataFrame dataInput)
+}
+class HiveConnector{
+    -string hiveDatabaseName
+    -string hiveTableName
+    -string hiveQuery
+    -string writeMode
+    +DataFrame readData(SparkSession spark)
+    +void writeData(SparkSession spark,DataFrame dataInput)
+}
+class HdfsConnector{
+    -string readWritePath
+    -string fileNamePattern
+    -string schemaFilePath
+    -string schemaFileName
+    -string fileFormat
+    -bool isHeader
+    -string dateFormat
+    -string timeStampFormat
+    -string writeMode
+    +DataFrame readData(SparkSession spark)
+    +void writeData(SparkSession spark,DataFrame dataInput)
+}
+AbstractConnector <|-- DeltaConnector
+AbstractConnector <|-- HiveConnector
+AbstractConnector <|-- HdfsConnector
+
+class ETLJob {
+    -string jobName
+    -SparkSession spark
+    -AbstractConnector [] sourceConnectors
+    -Function [] transList
+    -AbstractConnector [] dfConnectoersList
+    +void setExtractingSourcesList(AbstractConnector [] connectors)
+    +void setTrasnformationsList(Function [] transList)
+    +void setLoadingList(AbstractConnector [] dfConnectoersList):
+    +void runETL():
+    -DataFrame [] __readSources__():
+    -DataFrame [] __transformData__(Function [] transFunList,DataFrame [] tables)
+    -void __loadDataFrame__(DataFrame [] tables)
+    -void __presistDataFrame__(DataFrame dfInput,string StorageLevel)
+}
+
+class SQLETLJob{
+    -DataFrame [] __transformData__(string [] trnsQueriesList,DataFrame [] tables)
+}
+
+ETLJob <|-- SQLETLJob
+ETLJob o-- AbstractConnector
+@enduml
