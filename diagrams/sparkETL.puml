@@ -66,4 +66,9 @@ class SQLETLJob{
 
 ETLJob <|-- SQLETLJob
 ETLJob o-- AbstractConnector
+
+class EtlUtils{
+    +{static} void getUniqueID()
+    +{static} void getSparkSession(string appName)
+}
 @enduml
