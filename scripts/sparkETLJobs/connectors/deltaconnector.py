@@ -1,5 +1,5 @@
 from delta.tables import *
-from abstractConnector import AbstractConnector
+from .abstractConnector import AbstractConnector
 
 class DeltaConnector(AbstractConnector):
     def __init__(self,

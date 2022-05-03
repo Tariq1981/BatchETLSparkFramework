@@ -1,5 +1,5 @@
 
-# Spark ETL Frmework
+# Spark ETL Framework
 
 ## Motivation:
 I am assigned to a project to migrate the ETL jobs from DataStage to something open source.
@@ -20,7 +20,7 @@ The json files format have been developed to map each part of the **ETL** proces
 It should contain the following:
 - Parameters to be replaced with there values in the runtime.
 - ***(E)*** The list of sources and the definition for each. The sources can be specified through connectors.
-- ***(T)*** The list of
+- ***(T)*** The list of transformation in Spark SQL format to be performed in the sequence of their appearance in the list.
 - ***(L)*** The list of targets and the are specified in the same manner as the sources. The connector type is the key for determining if the a certain connector is a source or a target.
 
 

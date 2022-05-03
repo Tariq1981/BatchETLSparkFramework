@@ -1,5 +1,5 @@
-from abstractConnector import AbstractConnector
-from scripts import sparkETLJobs as str
+from .abstractConnector import AbstractConnector
+from ..strings import NOT_WRITE_STRING,NOT_READ_STRING
 
 
 class HiveConnector(AbstractConnector):
@@ -11,7 +11,7 @@ class HiveConnector(AbstractConnector):
         self.writeMode = writeMode
     def readData(self,spark):
         if self.connectorType != self.SOURCE_CONNECTOR:
-            raise Exception(str.NOT_READ_STRING)
+            raise Exception(NOT_READ_STRING)
         if self.hiveTableName is not None and self.hiveTableName != "":
             dataFrameInput = spark.read.table("{}.{}".format(self.hiveDatabaseName,self.hiveTableName))
         else:
@@ -19,7 +19,7 @@ class HiveConnector(AbstractConnector):
         return dataFrameInput
     def writeData(self,spark,dataInput):
         if self.connectorType != self.TARGET_CONNECTOR:
-            raise Exception(str.NOT_WRITE_STRING)
+            raise Exception(NOT_WRITE_STRING)
 
         dataInput.write.mode(self.writeMode)\
             .saveAsTable("{}.{}".format(self.hiveDatabaseName, self.hiveTableName))

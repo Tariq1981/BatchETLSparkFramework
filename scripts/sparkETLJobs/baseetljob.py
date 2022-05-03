@@ -1,5 +1,5 @@
-from etlutils import EtlUtils
-from connectors.abstractConnector import AbstractConnector
+from .etlutils import EtlUtils
+from .connectors.abstractConnector import AbstractConnector
 from pyspark import StorageLevel
 from pyspark.sql.functions import lit
 

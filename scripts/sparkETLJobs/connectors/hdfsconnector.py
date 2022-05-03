@@ -1,7 +1,7 @@
 import json
 from pyspark.sql.types import StructType
-from abstractConnector import AbstractConnector
-from scripts import sparkETLJobs as str
+from .abstractConnector import AbstractConnector
+from ..strings import NOT_READ_STRING,NOT_WRITE_STRING
 
 
 class HdfsConnector(AbstractConnector):
@@ -38,7 +38,7 @@ class HdfsConnector(AbstractConnector):
 
     def readData(self,spark):
         if self.connectorType != self.SOURCE_CONNECTOR:
-            raise Exception(str.NOT_READ_STRING)
+            raise Exception(NOT_READ_STRING)
         dataFilePath = "{}/{}".format(self.readWritePath, self.fileNamePattern)
         if self.fileFormat == "parquet":
             dataDF = spark.read.format(self.fileFormat).load(dataFilePath)
@@ -55,6 +55,6 @@ class HdfsConnector(AbstractConnector):
 
     def writeData(self,spark,dataInput):
         if self.connectorType != self.TARGET_CONNECTOR:
-            raise Exception(str.NOT_WRITE_STRING)
+            raise Exception(NOT_WRITE_STRING)
         dataInput.write.mode(self.writeMode)\
             .format(self.fileFormat).save(self.readWritePath)
