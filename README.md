@@ -27,7 +27,7 @@ Same as above in python code. You will pass list of sources, python functions fo
 ## Class Diagram
 The following is the class diagram for the developed ETL engine.
 ![ETL Engine](diagrams/sparkETL.png)
-#Json diagram 
+## Json diagram 
 The following is a graphical representtion for sample json file. This job extract data
 from delta table and hive table. It performs two transformation in sequence. It loads the data
 in a delta table and hive table.
