@@ -20,17 +20,22 @@ class jobEncoder(json.JSONEncoder):
         return {'{}'.format(fullname(o)): o.__dict__}
 
 def decode_object(o):
-    if 'SparkSessionName' in o:
-        return EtlUtils.getSparkSession(o['SparkSessionName'])
+    parameters = None
+    class_ = None
     for key in o:
-        if key.startswith("sparkETLJobs"):
-            ls = key.split(".")
+        if key == "classname" or key == "jobClassName":
+            ls = o[key].split(".")
             packageName = ".".join(ls[0:len(ls)-1])
             module = importlib.import_module(packageName)
             class_ = getattr(module,ls[len(ls)-1])
-            hdfs = class_(**o[key])
-            return hdfs
+
+        elif key == "parameters":
+            parameters = o[key]
+    if class_ and parameters:
+        obj = class_(**parameters)
+        return obj
     return o
+
 
 def endCodeETLJob(job):
     jsonStr = json.dumps(job, cls=jobEncoder, indent=4)
@@ -64,7 +69,7 @@ if __name__ == '__main__':
     parser.add_argument('jobParams',metavar="jobParams",type=str,nargs='*')
 
     args = parser.parse_args(['C:/Downloads/ETL Migration/ETLScripts/sample_json_jobs',
-                              'CODV_MIR_BSCS.json',
+                              'sampleJob.json',
                               'P_DELTA_MIR_PATH=/dummy/fff',
                               'P_DB_HIVE_STAGING=DD',
                               'P_DB_HIVE_TEC=TEC'
