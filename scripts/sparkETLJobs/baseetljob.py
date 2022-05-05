@@ -16,12 +16,12 @@ class ETLJob:
         "MEMORY_AND_DISK_DESER":StorageLevel.MEMORY_AND_DISK_DESER,
         "DEFAULT":StorageLevel.MEMORY_AND_DISK_DESER
     }
-    def __init__(self,jobName,sourceConnectors=None,transList=None,dfConnectoersList=None,*args,**kwargs):
+    def __init__(self,jobName,sourceConnectors=None,transList=None,dfConnectorsList=None,*args,**kwargs):
         self.jobName = jobName
         self.spark = EtlUtils.getSparkSession(jobName)
         self.sourceConnectors = sourceConnectors
         self.transList = transList
-        self.dfConnectoersList = dfConnectoersList
+        self.dfConnectorsList = dfConnectorsList
     def setExtractingSourcesList(self,connectors):
         self.sourceConnectors = connectors
     def setTrasnformationsList(self,transList):
@@ -42,7 +42,7 @@ class ETLJob:
         tables={}
         for source in self.sourceConnectors:
             connectName = source["DataFrameName"]
-            connector = source["Source"]
+            connector = source["connector"]
             tables[connectName] = connector.readData(self.spark)
             self.__presistDataFrame__(tables[connectName], connector.StorageLevel)
             tables[connectName].createOrReplaceTempView(connectName)
@@ -71,7 +71,7 @@ class ETLJob:
 
         for pair in self.dfConnectoersList:
             name = pair["DataFrameName"]
-            loadConc = pair["Target"]
+            loadConc = pair["connector"]
             if pair.get("JobExecIdName"):
                 fileId = EtlUtils.getUniqueID()
                 tables[name] = tables[name].withColumn(pair["JobExecIdName"], lit(fileId))
@@ -88,8 +88,8 @@ class SQLETLJob(ETLJob):
     This class to load all the configuraiton from json file to be passed
     json files will have paths as Tokens to be replaced before using this class
     """
-    def __init__(self,jobName,sourceConnectors=None,transList=None,dfConnectoersList=None,*args,**kwargs):
-        super().__init__(jobName,sourceConnectors,transList,dfConnectoersList,*args,**kwargs)
+    def __init__(self,jobName,sourceConnectors=None,transList=None,dfConnectorsList=None,*args,**kwargs):
+        super().__init__(jobName,sourceConnectors,transList,dfConnectorsList,*args,**kwargs)
     def __transformData__(self,trnsQueriesList,tables):
         """
 
