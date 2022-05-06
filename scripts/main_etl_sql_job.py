@@ -67,15 +67,16 @@ if __name__ == '__main__':
     parser.add_argument('jsonFileName', metavar='jsonFileName', type=str, nargs=1,
                         help='JSON file name for the ETL job')
     parser.add_argument('jobParams',metavar="jobParams",type=str,nargs='*')
-
+    """
     args = parser.parse_args(['C:/Downloads/ETL Migration/ETLScripts/sample_json_jobs',
                               'sampleJob.json',
                               'P_DELTA_MIR_PATH=/dummy/fff',
                               'P_DB_HIVE_STAGING=DD',
                               'P_DB_HIVE_TEC=TEC'
                               ])
-    #args = parser.parse_args()
+    """
+    args = parser.parse_args()
     print(args.jsonFilePath)
     job = getSQLEtlJobFromJson(args.jsonFilePath[0],args.jsonFileName[0],*args.jobParams)
     job.runETL()
-    #print(job)
+    # print(job)
