@@ -53,7 +53,7 @@ This section to describe each field in the JSON file:
         You may add any additional connector by extending "**sparkETLJobs.connectors.abstractconnector.AbstractConnector**".
       - **parameters**: This is a composite field which holds the parameters for the mentioned connector.
         There are main parameters which should present in each connector:
-        - **connectorType**: Its value is 1 if this connector is a source and 2 if it is a target.
+        - **connectorType**: Its value is 1 to indidcate that it is a source.
         - **StorageLevel**: Its value determine the caching behaviour. The value can "DISK_ONLY","DISK_ONLY_2","DISK_ONLY_3","MEMORY_ONLY","MEMORY_ONLY_2","MEMORY_AND_DISK","MEMORY_AND_DISK_2","OFF_HEAP","MEMORY_AND_DISK_DESER","DEFAULT".
           Please refer to the following link to know about the difference [Spark StorageLevel](https://spark.apache.org/docs/3.1.2/api/python/reference/api/pyspark.StorageLevel.html?highlight=storagelevel)
         
@@ -63,7 +63,12 @@ This section to describe each field in the JSON file:
     - **Name**: The name which will be given to the dataframe produced by the current transformation.
     - **Query**: The SQL query which will perform this transformation.
     - **StorageLevel**: It is the same as described above.
-    
+  - **dfConnectorsList**: This is a list field. It contains list of target connectors which will be used to write the result.
+    Each item contains the following:
+    - **DataFrameName**: Name of the dataframe which will be written.
+    - **connector**: It is the same as the connector described above except that the connectorType value is 2.
+      This indicates that it is a target connector.
+    - **JobExecIdName**: Name of the column which will be added and populated with unique value for the run.
 
 
 
