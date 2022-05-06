@@ -74,17 +74,20 @@ This section to describe each field in the JSON file:
 ## Files and description
 
 This section will list each file in the repo and a description.
-- [Spark framework package](scripts/sparkETLJobs): This is the package for the main framework and contains the following files:
-  - [baseetljob.py](scripts/sparkETLJobs/baseetljob.py): It contains the base class **ETLJob** for running the ETL logic without using JSON files.
-    It also contains a subclass **SQLETLJob** which runs the ETL logic using SQL. The ETL logic will be described using JSON format.
-  - [etlutils.py](scripts/sparkETLJobs/etlutils.py): Contains static functions used as utitlity functions in the framework.
-  - [strings.py](scripts/sparkETLJobs/strings.py): Can be used to hold any hardcoded strings.
-- [connectors](/scripts/sparkETLJobs/connectors): It is package for the vailable connectors and can be extended to add more. It contains the following:
-  - [abstractConnector.py](/scripts/sparkETLJobs/connectors/abstractConnector.py): It contains **AbstractConnector** class which is the base class for all the connectors.
-  - [hdfsconnector.py](/scripts/sparkETLJobs/connectors/hdfsconnector.py): It contains **HdfsConnector** connector class for reading and writing files on HDFS.
-  - [hiveconnector.py](/scripts/sparkETLJobs/connectors/hiveconnector.py): It contains **HiveConnector** connector class to read and write data to Hive.
-  - [deltaconnector.py](/scripts/sparkETLJobs/connectors/deltaconnector.py): It contains **DeltaConnector** connector class to read and write Delta tables.
-
+- [Scripts folder](/scripts): It contains the python scripts for this framework:
+  - [Spark framework package](scripts/sparkETLJobs): This is the package for the main framework and contains the following files:
+    - [baseetljob.py](scripts/sparkETLJobs/baseetljob.py): It contains the base class **ETLJob** for running the ETL logic without using JSON files.
+      It also contains a subclass **SQLETLJob** which runs the ETL logic using SQL. The ETL logic will be described using JSON format.
+    - [etlutils.py](scripts/sparkETLJobs/etlutils.py): Contains static functions used as utitlity functions in the framework.
+    - [strings.py](scripts/sparkETLJobs/strings.py): Can be used to hold any hardcoded strings.
+    - [connectors](/scripts/sparkETLJobs/connectors): It is package for the vailable connectors and can be extended to add more. It contains the following:
+      - [abstractConnector.py](/scripts/sparkETLJobs/connectors/abstractConnector.py): It contains **AbstractConnector** class which is the base class for all the connectors.
+      - [hdfsconnector.py](/scripts/sparkETLJobs/connectors/hdfsconnector.py): It contains **HdfsConnector** connector class for reading and writing files on HDFS.
+      - [hiveconnector.py](/scripts/sparkETLJobs/connectors/hiveconnector.py): It contains **HiveConnector** connector class to read and write data to Hive.
+      - [deltaconnector.py](/scripts/sparkETLJobs/connectors/deltaconnector.py): It contains **DeltaConnector** connector class to read and write Delta tables.
+  - [main_etl_sql_job.py](/scripts/main_etl_sql_job.py): This is the main script which parses the json file and run the ETL logic using the described package.
+  - [ETL airflow Utilities](/scripts/etldagutils): It is package for utilities to be used with Airflow. This is not mandatory script to be used with the framework:
+    - [dagutils.py](scripts/etldagutils/dagutils.py): It contains functions related to populating parameters to be passed to an Airflow DAG through an input JSON file in conjunction with Airflow variables.
 
 #Example Usage Code
 For the SQL and for the python code
