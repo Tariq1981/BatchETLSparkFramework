@@ -86,6 +86,13 @@ This section will list each file in the repo and a description.
       - [hiveconnector.py](/scripts/sparkETLJobs/connectors/hiveconnector.py): It contains **HiveConnector** connector class to read and write data to Hive.
       - [deltaconnector.py](/scripts/sparkETLJobs/connectors/deltaconnector.py): It contains **DeltaConnector** connector class to read and write Delta tables.
   - [main_etl_sql_job.py](/scripts/main_etl_sql_job.py): This is the main script which parses the json file and run the ETL logic using the described package.
+  - [main_bscsstg.py](/scripts/main_bscsstg.py): Script that uses the framework to batch stage the data from sample source to Hive tables.
+    It contains class **BSCSStgBatchJob** which takes n input file. Each line in the file consists of four fields:
+    - Id of the row.
+    - Table name on Hive.
+    - CSV data file pattern to be loaded.
+    - JSON schema filename which will be used in reading the csv files using **HdfsConnector** and **ETLJob** classes.
+    Sample input file is included in the repo [BSCSStagingFile.txt](/sample_input_files/BSCSStagingFile.txt).
   - [ETL airflow Utilities](/scripts/etldagutils): It is package for utilities to be used with Airflow. This is not mandatory script to be used with the framework:
     - [dagutils.py](scripts/etldagutils/dagutils.py): It contains functions related to populating parameters to be passed to an Airflow DAG through an input JSON file in conjunction with Airflow variables.
 
