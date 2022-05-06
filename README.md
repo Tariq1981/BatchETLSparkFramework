@@ -57,8 +57,12 @@ This section to describe each field in the JSON file:
         - **StorageLevel**: Its value determine the caching behaviour. The value can "DISK_ONLY","DISK_ONLY_2","DISK_ONLY_3","MEMORY_ONLY","MEMORY_ONLY_2","MEMORY_AND_DISK","MEMORY_AND_DISK_2","OFF_HEAP","MEMORY_AND_DISK_DESER","DEFAULT".
           Please refer to the following link to know about the difference [Spark StorageLevel](https://spark.apache.org/docs/3.1.2/api/python/reference/api/pyspark.StorageLevel.html?highlight=storagelevel)
         
-        There will additional fields which will depend on the connector class itself.
+        There will be additional fields which will depend on the connector class itself.
         For example for the HiveConnector, "hiveDatabaseName" should be specified. Please refer to connector class to know about them.
+  - **transList**: This is a list field. It contains list of transformation to be applied on the sources. Each transformation item contains the following fields:
+    - **Name**: The name which will be given to the dataframe produced by the current transformation.
+    - **Query**: The SQL query which will perform this transformation.
+    - **StorageLevel**: It is the same as described above.
     
 
 
