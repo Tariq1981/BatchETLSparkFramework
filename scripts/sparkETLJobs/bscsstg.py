@@ -1,7 +1,7 @@
-from baseetljob import ETLJob
-from connectors.hiveconnector import HiveConnector
-from connectors.hdfsconnector import HdfsConnector
-from etlutils import EtlUtils
+from .baseetljob import ETLJob
+from .connectors.hiveconnector import HiveConnector
+from .connectors.hdfsconnector import HdfsConnector
+from .etlutils import EtlUtils
 from pyspark.sql.functions import lit
 
 class BSCSStgBatchJob:
@@ -72,13 +72,13 @@ class BSCSStgBatchJob:
         etlJob.setExtractingSourcesList(
             [{
                 "DataFrameName":hiveTableName,
-                "Source":hdfsSource
+                "connector":hdfsSource
             }]
         )
         etlJob.setLoadingList(
             [{
                 "DataFrameName":hiveTableName,
-                "Target":hiveTabTarget,
+                "connector":hiveTabTarget,
                 "JobExecIdName":"FILE_ID"
             }]
         )

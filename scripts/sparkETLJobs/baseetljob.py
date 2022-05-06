@@ -31,8 +31,8 @@ class ETLJob:
         :return:
         """
         self.transList = transList
-    def setLoadingList(self,dfConnectoersList):
-        self.dfConnectoersList = dfConnectoersList
+    def setLoadingList(self,dfConnectorsList):
+        self.dfConnectorsList = dfConnectorsList
     def runETL(self):
         tables = self.__readSources__()
         tablesTrans = self.__transformData__(self.transList,tables)
@@ -69,7 +69,7 @@ class ETLJob:
         :return: None
         """
 
-        for pair in self.dfConnectoersList:
+        for pair in self.dfConnectorsList:
             name = pair["DataFrameName"]
             loadConc = pair["connector"]
             if pair.get("JobExecIdName"):
