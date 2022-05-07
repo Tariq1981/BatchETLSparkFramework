@@ -1,0 +1,97 @@
+{
+    "jobClassName":"sparkETLJobs.baseetljob.SQLETLJob",
+	"parameters":{
+        "jobName": "CODV_MIR_BSCS",
+        "sourceConnectors": [
+			{
+				"DataFrameName":"S_BS_BSCS_CODV_MIR",
+				"connector":{
+					"classname":"sparkETLJobs.connectors.deltaconnector.DeltaConnector",
+					"parameters": {
+						"connectorType": 1,
+						"readWritePath": "$#P_DELTA_MIR_PATH#",
+						"deltaTableName": "S_BS_BSCS_CODV_MIR",
+						"StorageLevel":null
+					}
+				}
+			},
+            {
+				"DataFrameName":"S_BS_BSCS_CODV_CONTR_DEVICES",
+				"connector":{
+					"classname":"sparkETLJobs.connectors.hiveconnector.HiveConnector",
+					"parameters":{
+						"connectorType": 1,
+						"hiveDatabaseName": "$#P_DB_HIVE_STAGING#",
+						"hiveTableName": "BSCS_CODV_CONTR_DEVICES",
+						"hiveQuery": null,
+						"writeMode": null,
+						"StorageLevel":null
+					}
+				}
+			}
+        ],
+        "transList": [
+			{
+                "Name":"CODV",
+                "Query": "
+						SELECT ROW_NUMBER()OVER(ORDER BY CO_ID,CD_SEQNO) + AGG.MAX_SEQNO AS ROW_NUM,CO_ID,CD_SEQNO,
+							   CD_ACTIV_DATE,CD_DEACTIV_DATE,PORT_ID,CD_SM_NUM,CD_STATUS,
+							   'I' UPD_CD_STATUS,'I' UPD_CD_DEACTIV_DATE,UPD_TIMESTAMP,CD_USERLASTMOD,'I' ACTION_FLG
+						  FROM
+						(
+							SELECT C.*
+							FROM
+							(
+								SELECT CO_ID,CD_SEQNO, MAX(UPD_TIMESTAMP) MAX_UPD_TIMESTAMP
+								FROM  S_BS_BSCS_CODV_CONTR_DEVICES
+								GROUP BY CO_ID,CD_SEQNO
+
+							) TEMP
+
+							INNER JOIN  S_BS_BSCS_CODV_CONTR_DEVICES C
+							ON TEMP.CO_ID= C.CO_ID
+							AND TEMP.CD_SEQNO=C.CD_SEQNO
+							AND COALESCE(TEMP.MAX_UPD_TIMESTAMP, CAST('4712-12-31 00:00:00' AS TIMESTAMP))=COALESCE(C.UPD_TIMESTAMP , CAST('4712-12-31 00:00:00' AS TIMESTAMP))
+
+						) TEMP2,
+						(
+							SELECT coalesce(MAX(ROW_NUM),0) MAX_SEQNO
+							FROM S_BS_BSCS_CODV_MIR
+						) AS AGG;
+				",
+				"StorageLevel":"MEMORY_ONLY"
+			}
+        ],
+        "dfConnectorsList": [
+			{
+                "DataFrameName":"CODV",
+				"connector":
+                {
+                    "classname":"sparkETLJobs.connectors.deltaconnector.DeltaConnector",
+					"parameters":{
+						"connectorType": 2,
+						"readWritePath": "$#P_DELTA_MIR_PATH#",
+						"deltaTableName": "S_BS_BSCS_CODV_MIR",
+						"writeMode":"merge-upsert",
+						"mergeConditions":"S_BS_BSCS_CODV_MIR.CO_ID=S_BS_BSCS_CODV_MIR_SRC.CO_ID AND S_BS_BSCS_CODV_MIR.CD_SEQNO=S_BS_BSCS_CODV_MIR_SRC.CD_SEQNO"
+					}
+                },
+				"JobExecIdName":"FILE_ID"
+            },
+			{
+				"DataFrameName":"CODV",
+				"connector":
+				{
+					"classname":"sparkETLJobs.connectors.hiveconnector.HiveConnector",
+					"parameters":{
+						"connectorType": 2,
+						"hiveDatabaseName": "$#P_DB_HIVE_TEC#",
+						"hiveTableName": "BSCS_CODV_MIR_SRC",
+						"hiveQuery": null,
+						"writeMode":"overwrite"
+					}
+				}
+			}
+        ]
+    }
+}
