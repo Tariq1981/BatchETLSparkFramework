@@ -121,10 +121,14 @@ This section will list each file in the repo and a description.
   - [BSCS_SCRIPT_DAG_PARAM.json](/airflow_job_parameters/BSCS_SCRIPT_DAG_PARAM.json):This file will be used with [testetlscriptjob_dag.py](/scripts/testetlscriptjob_dag.py).
 - [sample_airflow_variables](/sample_airflow_variables): This folder contains the used Airflow vriables with the developed sample DAGs and JSON ETL sample file.  
 
+Note: Each function is the function list ,which can be passed to the ETLJob class to be used as transformation list, should takes two parameters:
+  - spark session object.
+  - dataframe dictionary. this object will be intialized by the __readSources__ function.
 
-#Example Usage Code
-For the SQL and for the python code
 
-#Future work
-Interface to generate json files
+
+## Future work:
+Planning to add the following:
+  - GUI interface to generate these JSON files.
+  - Adding more connectors.
 
