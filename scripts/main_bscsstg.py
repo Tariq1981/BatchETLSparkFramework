@@ -1,8 +1,7 @@
 from sparkETLJobs.baseetljob import ETLJob
 from sparkETLJobs.connectors.hiveconnector import HiveConnector
 from sparkETLJobs.connectors.hdfsconnector import HdfsConnector
-from sparkETLJobs.etlutils import EtlUtils
-from pyspark.sql.functions import lit
+import argparse
 
 class BSCSStgBatchJob:
     writeMode = "overwrite"
@@ -23,6 +22,19 @@ class BSCSStgBatchJob:
                  startLineNum=1,
                  endLineNum=1
                  ):
+        """
+        Class constructor
+        :param jobName: Name of the job
+        :param filePath: Full path for the input file
+        :param fileName: the file name for the input file
+        :param loadDate: load date used to to know which data folder to be used for loading. Format YYYY-MM-DD.
+        :param hiveDatabaseName: Hive database name
+        :param dataPath: full path for the data files.
+        :param schemaPath: path for the schema files which will be used in loading the files.
+        :param delimiter: The delimiter used in the input file.
+        :param startLineNum: starting line number for the input file
+        :param endLineNum: ending line number for the input file.
+        """
         self.jobName = jobName
         self.filePath = filePath
         self.fileName = fileName
@@ -37,6 +49,10 @@ class BSCSStgBatchJob:
 
 
     def startLoading(self):
+        """
+        This function do the whole logic for loading by reading teh required lines from the input file and kickoff the loading.
+        :return: None
+        """
         if self.endLineNum < self.startLineNum:
             return
 
@@ -84,13 +100,8 @@ class BSCSStgBatchJob:
         )
         etlJob.runETL()
 
-    def addFileId(self,dfInput,*args,**kwargs):
-        fileId=EtlUtils.getUniqueID()
-        return dfInput.withColumn("FILE_ID", lit(fileId))
 
 
-
-import argparse
 
 if __name__ == "__main__":
 
