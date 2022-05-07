@@ -70,6 +70,7 @@ This section to describe each field in the JSON file:
       This indicates that it is a target connector.
     - **JobExecIdName**: Name of the column which will be added and populated with unique value for the run.
 
+The JSON file can contain parameters. The parameter format to be "$#ParameterName#". 
 
 ## Files and description
 
@@ -85,7 +86,12 @@ This section will list each file in the repo and a description.
       - [hdfsconnector.py](/scripts/sparkETLJobs/connectors/hdfsconnector.py): It contains **HdfsConnector** connector class for reading and writing files on HDFS.
       - [hiveconnector.py](/scripts/sparkETLJobs/connectors/hiveconnector.py): It contains **HiveConnector** connector class to read and write data to Hive.
       - [deltaconnector.py](/scripts/sparkETLJobs/connectors/deltaconnector.py): It contains **DeltaConnector** connector class to read and write Delta tables.
-  - [main_etl_sql_job.py](/scripts/main_etl_sql_job.py): This is the main script which parses the json file and run the ETL logic using the described package.
+  - [main_etl_sql_job.py](/scripts/main_etl_sql_job.py): This is the main script which parses the json file and run the ETL logic using the described package. It also replaces any parameters in the script with the values passed as command line to the script.
+    The command line arguments which will be passed to this script as follows:
+    -**jsonFilePath**: The full path which will contain the JSON file.
+    - **jsonFileName**: The name of the JSON file.
+    - **jobParams**: It is a variable length command line argument. The parameters and their values which will be replaced in the JSON files. 
+    The parameters and their values should be passed in the format "PARAM_NAME=PARAM_VALUE".
   - [main_bscsstg.py](/scripts/main_bscsstg.py): Script that uses the framework to batch stage the data from sample source to Hive tables.
     It contains class **BSCSStgBatchJob** which takes n input file. Each line in the file consists of four fields:
     - Id of the row.
@@ -93,8 +99,28 @@ This section will list each file in the repo and a description.
     - CSV data file pattern to be loaded.
     - JSON schema filename which will be used in reading the csv files using **HdfsConnector** and **ETLJob** classes.
     Sample input file is included in the repo [BSCSStagingFile.txt](/sample_input_files/BSCSStagingFile.txt).
+    The command line arguments  for this scripts as follows:
+    - **jobName**: The Job name to be used in the SparkSession.
+    - **inputFilePath**: The full path which will contain the input file.
+    - **inputFileName**: The file name for the input file.
+    - **loadDate**: The load date of the data files. The load date is folder name for the files.
+    - **hiveDatabase**: The Hive database name which will hold the tables used for loading.
+    - **dataFullPath**: The full path for the data files on HDFS which will be concatenated with the load date to form the full path.
+    - **schemaFilesPath**: The full path for the schema files which will be used in the loading.
   - [ETL airflow Utilities](/scripts/etldagutils): It is package for utilities to be used with Airflow. This is not mandatory script to be used with the framework:
     - [dagutils.py](scripts/etldagutils/dagutils.py): It contains functions related to populating parameters to be passed to an Airflow DAG through an input JSON file in conjunction with Airflow variables.
+  - [bscs_stg_dag.py](/scripts/bscs_stg_dag.py): Sample Airflow DAG which uses the [main_bscsstg.py](/scripts/main_bscsstg.py).
+  - [testetlscriptjob_dag.py](/scripts/testetlscriptjob_dag.py): Sample Airflow DAG which uses [main_etl_sql_job.py](/scripts/main_etl_sql_job.py). 
+- [Input files folder](/sample_input_files):
+  - [BSCSStagingFile.txt](/sample_input_files/BSCSStagingFile.txt): Sample input file to be used for batch staging using [main_bscsstg.py](/scripts/main_bscsstg.py) to Hive tables.
+- [Sample to JSON files](/sample_json_jobs):
+  - [sampleJob.json](/sample_json_jobs/sampleJob.json): Sample JSON file which to be passed to the ETL framework.
+- [airflow_job_parameters](/airflow_job_parameters): This folder contains the JSON files which will hold the  parmeters to be passed to the ETL job in the DAG. 
+  When you run the DAG, you need to run with configuration and pass the parameter file as "{'J_PARAM_FILENAME':'ParamFileName.json'}". folder contains the following:
+  - [BSCS_STG_DAG_PARAM.json](/airflow_job_parameters/BSCS_STG_DAG_PARAM.json): This file will be used with [bscs_stg_dag.py](/scripts/bscs_stg_dag.py).
+  - [BSCS_SCRIPT_DAG_PARAM.json](/airflow_job_parameters/BSCS_SCRIPT_DAG_PARAM.json):This file will be used with [testetlscriptjob_dag.py](/scripts/testetlscriptjob_dag.py).
+- [sample_airflow_variables](/sample_airflow_variables): This folder contains the used Airflow vriables with the developed sample DAGs and JSON ETL sample file.  
+
 
 #Example Usage Code
 For the SQL and for the python code
