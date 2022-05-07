@@ -1,25 +1,15 @@
 import argparse
-from pyspark.sql import SparkSession
 import json
 import importlib
 import re
 from string import Template
-from sparkETLJobs.etlutils import EtlUtils
-
-def fullname(o):
-    klass = o.__class__
-    module = klass.__module__
-    if module == 'builtins':
-        return klass.__qualname__ # avoid outputs like 'builtins.str'
-    return module + '.' + klass.__qualname__
-
-class jobEncoder(json.JSONEncoder):
-    def default(self, o) :
-        if isinstance(o,SparkSession):
-            return {'SparkSessionName': o.sparkContext._conf.get("spark.app.name")}
-        return {'{}'.format(fullname(o)): o.__dict__}
 
 def decode_object(o):
+    """
+    This function used as callback in the json decoding function to decode custom objects
+    :param o: dictionary to be decoded
+    :return: either the passed dictionary or object of certain class according to the classname or jobClassName
+    """
     parameters = None
     class_ = None
     for key in o:
@@ -37,12 +27,14 @@ def decode_object(o):
     return o
 
 
-def endCodeETLJob(job):
-    jsonStr = json.dumps(job, cls=jobEncoder, indent=4)
-    return jsonStr
-
-
 def getSQLEtlJobFromJson(jsonFilePath,jsonFileName,*args):
+    """
+    This function fire the parsing processes and call the responsible function to replace the parameters with their values
+    :param jsonFilePath: Full path for the json file
+    :param jsonFileName: json file name
+    :param args: parameters to be replaced with their values in the json file
+    :return: object from the SQLETLJob
+    """
     fullPath = "{}/{}".format(jsonFilePath,jsonFileName)
     with open(fullPath,'r') as file:
         data = file.read()
@@ -51,6 +43,12 @@ def getSQLEtlJobFromJson(jsonFilePath,jsonFileName,*args):
     return jobNew
 
 def replaceTokensWithParams(data,args):
+    """
+    This function replaces the parameters with their valeus.
+    :param data: json data
+    :param args: list of parameters with their values (PARAM=VALUE)
+    :return: json data with replaced parameters.
+    """
     argsDict=None
     if len(args) > 0:
         argsDict=dict(s.split("=") for s in args)
