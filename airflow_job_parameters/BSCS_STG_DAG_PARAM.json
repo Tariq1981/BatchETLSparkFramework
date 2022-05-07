@@ -1,0 +1,6 @@
+{
+	"J_LIB_FILE_NAME":"sparkETLJobs.zip",
+	"J_APP_FILE_NAME":"main_bscsstg.py",
+	"J_INPUT_FILE_NAME":"BSCSStagingFile.txt",
+	"J_LOAD_DT":"2022-03-04"
+}

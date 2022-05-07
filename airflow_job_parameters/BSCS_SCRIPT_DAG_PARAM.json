@@ -1,0 +1,6 @@
+{
+	"J_LIB_FILE_NAME":"sparkETLJobs.zip",
+	"J_APP_FILE_NAME":"main_etl_sql_job.py",
+	"J_SGK_JSON_SCRIPT":"PRIN_SGK_BSCS001.json",
+	"J_MIR_JSON_SCRIPT":"CODV_MIR_BSCS.json"
+}
