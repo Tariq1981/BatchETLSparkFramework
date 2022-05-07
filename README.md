@@ -125,8 +125,6 @@ Note: Each function is the function list ,which can be passed to the ETLJob clas
   - spark session object.
   - dataframe dictionary. this object will be intialized by the __readSources__ function.
 
-
-
 ## Future work:
 Planning to add the following:
   - GUI interface to generate these JSON files.
