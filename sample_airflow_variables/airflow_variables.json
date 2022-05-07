@@ -1,0 +1,14 @@
+{
+	"P_SCHEMA_PATH":"/datalake/schemas",
+	"P_INPUT_FILES":"/datalake/input_files",
+	"P_DB_HIVE_STAGING":"STAGING",
+	"P_DB_HIVE_TEC":"TEC",
+	"P_BSCS_STAGING_PATH":"/data/staging/BSCS",
+	"P_DELTA_SGK_PATH":"/data/DWH/SGK/DELTA",
+	"P_DELTA_MIR_PATH":"/data/DWH/MIR/DELTA",
+	"P_SCRIPTS_PATH":"/datalake/scripts/pyspark",
+	"P_SCRIPTS_PATH_STG":"/datalake/scripts/pyspark/STG",
+	"P_SCRIPTS_PATH_LIB":"/datalake/scripts/pyspark/LIB",
+	"P_SCRIPTS_PATH_SGK":"/datalake/scripts/pyspark/SGK",
+	"P_PATH_JOB_PARAM_PATH":"/datalake/scripts/airflow_dags_params"
+}
